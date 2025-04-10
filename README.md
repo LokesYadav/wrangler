@@ -9,18 +9,31 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Join CDAP community](https://cdap-users.herokuapp.com/badge.svg?t=wrangler)](https://cdap-users.herokuapp.com?t=1)
 
+## Overview
+
 A collection of libraries, a pipeline plugin, and a CDAP service for performing data
 cleansing, transformation, and filtering using a set of data manipulation instructions
-(directives). These instructions are either generated using an interative visual tool or
+(directives). These instructions are either generated using an interactive visual tool or
 are manually created.
-
-  * Data Prep defines few concepts that might be useful if you are just getting started with it. Learn about them [here](wrangler-docs/concepts.md)
-  * The Data Prep Transform is [separately documented](wrangler-transform/wrangler-docs/data-prep-transform.md).
-  * [Data Prep Cheatsheet](wrangler-docs/cheatsheet.md)
 
 ## New Features
 
-More [here](wrangler-docs/upcoming-features.md) on upcoming features.
+### Byte Size and Time Duration Parsers (v4.5.0+)
+
+Wrangler now provides native support for parsing and manipulating byte sizes and time durations:
+
+#### Byte Size Parsing
+- **Supported Units**:
+  - Decimal: `B`, `KB`, `MB`, `GB`, `TB` (powers of 1000)
+  - Binary: `KiB`, `MiB`, `GiB`, `TiB` (powers of 1024)
+  - - **Examples**:
+  ```plaintext
+  parse-as-bytes :input_col :output_col
+  1KB    = 1,000 bytes
+1KiB   = 1,024 bytes
+2.5MB  = 2,500,000 bytes
+ 
+  More [here](wrangler-docs/upcoming-features.md) on upcoming features.
 
   * **User Defined Directives, also known as UDD**, allow you to create custom functions to transform records within CDAP DataPrep or a.k.a Wrangler. CDAP comes with a comprehensive library of functions. There are however some omissions, and some specific cases for which UDDs are the solution. Additional information on how you can build your custom directives [here](wrangler-docs/custom-directive.md).
     * Migrating directives from version 1.0 to version 2.0 [here](wrangler-docs/directive-migration.md)
