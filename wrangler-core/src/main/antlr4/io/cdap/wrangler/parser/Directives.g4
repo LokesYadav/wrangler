@@ -41,6 +41,12 @@ options {
 /**
  * Parser Grammar for recognizing tokens and constructs of the directives language.
  */
+value
+ : String | Number | Column | Bool | Null | byteSizeArg | timeDurationArg
+ ;
+
+byteSizeArg : BYTE_SIZE;
+timeDurationArg : TIME_DURATION;
 recipe
  : statements EOF
  ;
@@ -199,6 +205,12 @@ identifierList
 /*
  * Following are the Lexer Rules used for tokenizing the recipe.
  */
+fragment DIGIT : [0-9];
+fragment BYTE_UNIT : ('B'|'KB'|'MB'|'GB'|'TB'|'KiB'|'MiB'|'GiB'|'TiB');
+fragment TIME_UNIT : ('ns'|'ms'|'s'|'m'|'h'|'d');
+
+BYTE_SIZE : DIGIT+ ('.' DIGIT+)? BYTE_UNIT;
+TIME_DURATION : DIGIT+ ('.' DIGIT+)? TIME_UNIT;
 OBrace   : '{';
 CBrace   : '}';
 SColon   : ';';
