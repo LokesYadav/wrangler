@@ -60,6 +60,18 @@ public class GrammarBasedParser implements RecipeParser {
     this.registry = registry;
     this.context = context;
   }
+  public enum TokenType {
+    BYTE_SIZE,
+    TIME_DURATION
+}
+  public void addToTokenGroup(TokenGroup group, DirectivesParser.ValueContext ctx) {
+    if (ctx.byteSizeArg() != null) {
+        group.add(parseValue(ctx));
+    } else if (ctx.timeDurationArg() != null) {
+        group.add(parseValue(ctx));
+    }
+  
+}
 
   /**
    * Parses the recipe provided to this class and instantiate a list of {@link Directive} from the recipe.
