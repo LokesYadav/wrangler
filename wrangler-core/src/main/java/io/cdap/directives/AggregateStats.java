@@ -40,7 +40,17 @@ public class AggregateStats implements AggregateDirective {
                    "Whether to calculate averages instead of totals")
             .build();
     }
+@Override
+public Token visitByteSizeArg(DirectivesParser.ByteSizeArgContext ctx) {
+    // "10MB" → ByteSize object
+    return new ByteSize(ctx.getText()); 
+}
 
+@Override 
+public Token visitTimeDurationArg(DirectivesParser.TimeDurationArgContext ctx) {
+    // "500ms" → TimeDuration object
+    return new TimeDuration(ctx.getText());
+}
     @Override
     public void initialize(Arguments args) throws DirectiveParseException {
         this.sizeColumn = ((ColumnName) args.value("size-col")).value();
@@ -111,7 +121,15 @@ public class AggregateStats implements AggregateDirective {
 
         return Collections.singletonList(result);
     }
-
+ @Override
+public Token visitValue(DirectivesParser.ValueContext ctx) {
+    if (ctx.byteSizeArg() != null) {
+        return visitByteSizeArg(ctx.byteSizeArg());
+    }
+    if (ctx.timeDurationArg() != null) {
+        return visitTimeDurationArg(ctx.timeDurationArg());
+    }
+}
     private double convertBytes(long bytes, String unit) {
         switch (unit.toUpperCase()) {
             case "B":  return bytes;
@@ -133,4 +151,20 @@ public class AggregateStats implements AggregateDirective {
             default: throw new IllegalArgumentException("Invalid time unit: " + unit);
         }
     }
+    @Test
+public void testAggregateStats() {
+    List<Row> rows = Arrays.asList(
+        new Row("data", "2MB", "time", "500ms"),
+        new Row("data", "1MB", "time", "1500ms")
+    );
+    
+    String[] recipe = {
+        "aggregate-stats :data :time total_data_mb total_time_sec unit:MB"
+    };
+    
+    List<Row> results = TestingRig.execute(recipe, rows);
+    
+    assertEquals(3.0, results.get(0).getValue("total_data_mb")); // 2+1 MB
+    assertEquals(2.0, results.get(0).getValue("total_time_sec")); // 0.5 + 1.5 sec
 }
+
