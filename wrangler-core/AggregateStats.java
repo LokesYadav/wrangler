@@ -1,6 +1,8 @@
 import org.example.plugin.Directive;
 import org.example.plugin.Name;
-
+import io.cdap.wrangler.api.*;
+import io.cdap.wrangler.api.parser.*;
+package io.cdap.wrangler.directives.aggregate;
 @Plugin(type = Directive.TYPE)
 @Name("aggregate-stats")
 public class AggregateStats implements AggregateDirective {
